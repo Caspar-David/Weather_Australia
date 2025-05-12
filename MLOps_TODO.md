@@ -6,9 +6,9 @@ A living checklist and roadmap to guide the MLOps WeatherAUS repo toward product
 
 ## ✅ PHASE 0: Project Setup
 
-- [x] Create directory structure based on wine repo
-- [x] Push all changes to GitHub
-- [x] Clean and update `requirements.txt`
+- [ ] Create directory structure based on wine repo
+- [ ] Push all changes to GitHub
+- [ ] Clean and update `requirements.txt`
 - [ ] Add project overview in `README.md`
 - [ ] Save this tracker as `MLOps_TODO.md`
 
