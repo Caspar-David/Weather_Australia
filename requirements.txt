@@ -1,0 +1,31 @@
+# === Core Libraries ===
+numpy
+pandas
+scikit-learn # (XGBoost needs it)
+matplotlib
+xgboost
+joblib
+tqdm
+pyyaml
+notebook
+
+# === MLOps Tools ===
+dvc[s3]
+mlflow==2.2.2
+dagshub
+
+# === API Development ===
+fastapi
+uvicorn
+python-multipart
+pydantic==2.7.4
+
+# === Development & Type Checking ===
+pytest
+types-PyYAML
+ensure==1.0.2
+python-box==6.0.2
+
+# === Additional Dependencies ===
+imbalanced-learn
+flake8
