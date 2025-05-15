@@ -3,7 +3,7 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from src.data.data_ingestion import ingest_data
+from Weather_Australia.src.data.data_preprocessing import ingest_data
 import pandas as pd
 
 def test_ingest_data_returns_dataframe():

@@ -1,4 +1,4 @@
-from src.data.data_ingestion import ingest_data
+from Weather_Australia.src.data.data_preprocessing import ingest_data
 from src.features.data_transformation import transform_data
 from src.models.model_trainer import train_model
 from src.models.model_evaluation import evaluate_model
