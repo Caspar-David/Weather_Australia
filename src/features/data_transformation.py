@@ -1,20 +1,53 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import OneHotEncoder
+from imblearn.over_sampling import SMOTE
 
 def transform_data(df):
-    X = df.drop(columns=["RainTomorrow"])
+    # Handle missing values for the target attribute and drop date column
+    df.dropna(subset=['RainTomorrow'], inplace=True)
+    df.drop("Date", axis="columns", inplace=True)
+
+    # Definition numeric und categorical columns
+    num_cols = [
+        "MinTemp", "MaxTemp", "Rainfall", "Evaporation", "Sunshine",
+        "WindGustSpeed", "WindSpeed9am", "WindSpeed3pm",
+        "Humidity9am", "Humidity3pm",
+        "Pressure9am", "Pressure3pm",
+        "Cloud9am", "Cloud3pm",
+        "Temp9am", "Temp3pm"
+    ]
+
+    cat_cols = [
+        "WindGustDir", "WindDir9am", "WindDir3pm", "RainToday"
+    ]
+
+    # Imputation: Num Cols
+    for col in num_cols:
+        df[col].fillna(df[col].median(), inplace=True)
+
+    # Imputation: Cat Cols
+    for col in cat_cols:
+        df[col].fillna(df[col].mode()[0], inplace=True)
+
+    # One-Hot Encoding: Cat Cols
+    enc = OneHotEncoder(handle_unknown='ignore', sparse_output=False).set_output(transform='pandas')
+    ohe_cols = enc.fit_transform(df[["Location"] + cat_cols])
+    
+    df = pd.concat([df, ohe_cols], axis=1)
+    df.drop(["Location"] + cat_cols, axis=1, inplace=True)
+
+    # Target and Dataset
     y = df["RainTomorrow"]
+    X = df.drop(columns=["RainTomorrow"])
 
-    X = pd.get_dummies(X)  # basic encoding, improve later if needed
+    # Train-Test-Split
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
+    # SMOTE
+    smote = SMOTE(random_state=0)
+    X_train_res, y_train_res = smote.fit_resample(X_train, y_train)
 
-    pca = PCA(n_components=0.95)
-    X_pca = pca.fit_transform(X_scaled)
+    # Return
+    return X_train_res, X_test, y_train_res, y_test
 
-    X_train, X_test, y_train, y_test = train_test_split(X_pca, y, test_size=0.2, random_state=42)
-
-    return X_train, X_test, y_train, y_test
