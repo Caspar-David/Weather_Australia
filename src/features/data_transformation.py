@@ -51,3 +51,14 @@ def transform_data(df):
     # Return
     return X_train_res, X_test, y_train_res, y_test
 
+def ingest_data(filepath="./data/raw/weatherAUS.csv"):
+    df = pd.read_csv(filepath)
+    df['RainTomorrow'] = df['RainTomorrow'].replace({'Yes': 1, 'No': 0})
+    df = df.dropna(subset=["RainTomorrow"])
+    return df
+
+test = ingest_data()
+X_train, X_test, y_train, y_test = transform_data(test)
+
+payload = X_train.head(1).to_dict(orient="records")[0]
+print(payload)
