@@ -1,0 +1,13 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY src/ ./src/
+COPY data/raw/weatherAUS.csv ./data/raw/weatherAUS.csv
+
+ENV PYTHONPATH=/app
+
+ENTRYPOINT ["python", "src/pipelines/run_preprocessing.py"]

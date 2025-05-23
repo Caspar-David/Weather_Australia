@@ -50,4 +50,3 @@ def transform_data(df):
 
     # Return
     return X_train_res, X_test, y_train_res, y_test
-
