@@ -1,18 +1,12 @@
-# MLOps_WeatherAUS_April2025
+# Weather Australia MLOps Pipeline
 
-For learning purposes
-
----
-
-## 🚀 Project Setup & Workflow
-
-This guide explains how to set up, build, and run the full MLOps pipeline using Docker for the Weather Australia project.
+A reproducible, containerized MLOps pipeline for weather prediction in Australia using Docker Compose.
 
 ---
+
+## 🚀 Quick Start
 
 ### 1. Clone the Repository
-
-Clone your repository and navigate into the project folder:
 
 ```sh
 git clone <your-repo-url>
@@ -21,67 +15,41 @@ cd Weather_Australia
 
 ---
 
-### 2. (Optional) Local Python Setup
+### 2. Build and Run the Full Pipeline with Docker Compose
 
-If you want to run scripts or tests locally (outside Docker):
+This project uses Docker Compose to orchestrate all steps: preprocessing, modelling, MLflow tracking, and serving the API.
+
+**To build and start everything:**
 
 ```sh
-python -m venv venv
-venv\Scripts\activate  # On Windows
-pip install --upgrade pip
-pip install -r requirements.txt
+docker compose up --build
+```
+
+- This will:
+  - Run data preprocessing and save processed data to a shared Docker volume.
+  - Train the model and save it to the same volume.
+  - Start MLflow for experiment tracking (accessible at [http://localhost:5000](http://localhost:5000)).
+  - Launch the FastAPI service for predictions (accessible at [http://localhost:8000](http://localhost:8000)).
+
+**To stop all services:**
+
+```sh
+docker compose down
 ```
 
 ---
 
-### 3. Build Docker Images
+### 3. Test the API
 
-Build each component as a separate Docker image:
+After the pipeline is up and running, you can test the API in two ways:
 
-```sh
-docker build -f Dockerfile.preprocessing -t weather-preprocessing .
-docker build -f Dockerfile.modelling -t weather-modelling .
-docker build -f Dockerfile.api -t weather-api .
-```
-
----
-
-### 4. Run the Pipeline with Docker
-
-All containers share the same Docker volume (`weather_data`) for data and model exchange.
-
-**a. Preprocessing:**  
-Runs data ingestion and transformation, outputs processed data to the shared Docker volume.
-
-```sh
-docker run --rm -v weather_data:/app/data/processed weather-preprocessing
-```
-
-**b. Modelling:**  
-Trains the model using the processed data and saves the trained model to the same volume.
-
-```sh
-docker run --rm -v weather_data:/app/data/processed weather-modelling
-```
-
-**c. API:**  
-Serves the trained model for predictions via FastAPI.
-
-```sh
-docker run --rm -p 8000:8000 -v weather_data:/app/data/processed weather-api
-```
-
----
-
-### 5. Test the API
-
-You can test the API using the provided `tests/test_api.py` script:
+#### a. Using the Provided Test Script
 
 ```sh
 python tests/test_api.py
 ```
 
-Or, send a manual POST request using Python:
+#### b. Manually with Python Requests
 
 ```python
 import requests
@@ -94,23 +62,21 @@ response = requests.post(url, json=payload)
 print(response.json())
 ```
 
----
+#### c. Health Check
 
-### 6. Health Check
-
-To check if the API is running:
-
-- Visit [http://localhost:8000/health](http://localhost:8000/health) in your browser.
-- You should see: `{"status": "ok"}`
+Visit [http://localhost:8000/health](http://localhost:8000/health) in your browser.  
+You should see: `{"status": "ok"}`
 
 ---
 
-### 7. Notes
+### 4. Useful Notes
 
-- All containers share the same Docker volume (`weather_data`) for data and model exchange.
-- You only need to rebuild Docker images if you change the code, requirements, or Dockerfiles.
-- For development, you can use the virtual environment and run scripts locally as well.
+- **MLflow UI:** [http://localhost:5000](http://localhost:5000)
+- **API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
+- All containers share the `weather_data` Docker volume for data/model exchange.
+- If you change code or dependencies, re-run `docker compose up --build`.
+- For development, you can still use a Python virtual environment and run scripts locally.
 
 ---
 
-**Enjoy your reproducible, containerized MLOps pipeline!**
+**Enjoy your end-to-end, containerized MLOps workflow!**

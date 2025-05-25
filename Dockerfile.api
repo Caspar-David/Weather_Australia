@@ -10,7 +10,6 @@ COPY src/ ./src/
 
 ENV PYTHONPATH=/app
 
-# Install FastAPI and Uvicorn if not in requirements.txt
-RUN pip install fastapi uvicorn
-
-CMD ["uvicorn", "src.api.basicAPI:app", "--host", "0.0.0.0", "--port", "8000"]
+COPY wait-for-files-api.sh /wait-for-files-api.sh
+RUN chmod +x /wait-for-files-api.sh
+CMD ["/wait-for-files-api.sh"]
