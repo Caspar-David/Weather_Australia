@@ -2,13 +2,21 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
+# Install Dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy Source and Configurations
 COPY src/ ./src/
+COPY params.yaml dvc.yaml dvc.lock ./
+COPY data/ ./data/
 
 ENV PYTHONPATH=/app
 
+# Wait for Docker files
 COPY wait-for-files-modelling.sh /wait-for-files-modelling.sh
 RUN chmod +x /wait-for-files-modelling.sh
 ENTRYPOINT ["/wait-for-files-modelling.sh"]
+
+# Run DVC Pipeline
+CMD ["dvc", "repro"]
