@@ -1,7 +1,3 @@
-ElasticNet:
-  alpha: 0.9
-  l1_ratio: 0.5
-
 XGBoost:
   learning_rate: 0.1
   n_estimators: 300
