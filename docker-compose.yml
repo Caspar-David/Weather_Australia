@@ -1,29 +1,6 @@
 version: "3.8"
 
 services:
-  preprocessing:
-    build:
-      context: .
-      dockerfile: Dockerfile.preprocessing
-    volumes:
-      - ./data/processed:/app/data/processed
-    command: python src/pipelines/run_preprocessing.py
-    depends_on: []
-
-  modelling:
-    build:
-      context: .
-      dockerfile: Dockerfile.modelling
-    volumes:
-      - ./data/processed:/app/data/processed
-      - mlruns:/app/mlruns
-    environment:
-      - MLFLOW_TRACKING_URI=http://mlflow:5000
-    command: python src/pipelines/run_modelling.py
-    depends_on:
-      - preprocessing
-      - mlflow
-
   mlflow:
     image: ghcr.io/mlflow/mlflow:v2.2.2
     ports:
@@ -44,7 +21,46 @@ services:
     volumes:
       - ./data/processed:/app/data/processed
     depends_on:
-      - modelling
+      - mlflow
+
+  airflow:
+    image: apache/airflow:2.9.1
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
+      - AIRFLOW__CORE__FERNET_KEY=...
+      - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=False
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - HOST_PROJECT_PATH=${HOST_PROJECT_PATH}
+      - _PIP_ADDITIONAL_REQUIREMENTS=apache-airflow-providers-docker
+      - AIRFLOW__CORE__FERNET_KEY=xr0Qo7evpL-tNHUxhRSsvkrJTrRyrzqWFiQ-u_WCAMM=
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./data:/opt/airflow/data
+      - airflow_db:/opt/airflow
+      - //var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "8080:8080"
+    command: webserver
+
+  airflow-scheduler:
+    image: apache/airflow:2.9.1
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
+      - AIRFLOW__CORE__FERNET_KEY=...
+      - AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=False
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - HOST_PROJECT_PATH=${HOST_PROJECT_PATH}
+      - _PIP_ADDITIONAL_REQUIREMENTS=apache-airflow-providers-docker
+      - AIRFLOW__CORE__FERNET_KEY=xr0Qo7evpL-tNHUxhRSsvkrJTrRyrzqWFiQ-u_WCAMM=
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./data:/opt/airflow/data
+      - airflow_db:/opt/airflow
+      - //var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - airflow
+    command: scheduler
 
 volumes:
   mlruns:
+  airflow_db:

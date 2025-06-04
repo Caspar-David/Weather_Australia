@@ -10,6 +10,4 @@ COPY src/ ./src/
 
 ENV PYTHONPATH=/app
 
-COPY wait-for-files-api.sh /wait-for-files-api.sh
-RUN chmod +x /wait-for-files-api.sh
-CMD ["/wait-for-files-api.sh"]
+CMD ["uvicorn", "src.api.basicAPI:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,6 +1,6 @@
 # Weather Australia MLOps Pipeline
 
-A reproducible, containerized MLOps pipeline for weather prediction in Australia using Docker Compose.
+A reproducible, containerized MLOps pipeline for weather prediction in Australia using Docker Compose and Airflow.
 
 ---
 
@@ -15,33 +15,62 @@ cd Weather_Australia
 
 ---
 
-### 2. Build and Run the Full Pipeline with Docker Compose
+### 2. Set Up Your Local Path
 
-This project uses Docker Compose to orchestrate all steps: preprocessing, modelling, MLflow tracking, and serving the API.
+Create a `.env` file in the project root with the following content (replace the path with your absolute project path):
 
-**To build and start everything:**
-
-```sh
-docker compose up --build
 ```
-
-- This will:
-  - Run data preprocessing and save processed data to a shared Docker volume.
-  - Train the model and save it to the same volume.
-  - Start MLflow for experiment tracking (accessible at [http://localhost:5000](http://localhost:5000)).
-  - Launch the FastAPI service for predictions (accessible at [http://localhost:8000](http://localhost:8000)).
-
-**To stop all services:**
-
-```sh
-docker compose down
+HOST_PROJECT_PATH=C:/datascientest/mlops/project/Weather_Australia
 ```
 
 ---
 
-### 3. Test the API
+### 3. Initialize Airflow Database and Create Admin User
 
-After the pipeline is up and running, you can test the API in two ways:
+**Only needed on first setup or after wiping volumes:**
+
+```sh
+docker-compose run --rm airflow airflow db init
+docker-compose run --rm airflow airflow users create \
+  --username admin \
+  --firstname Admin \
+  --lastname User \
+  --role Admin \
+  --email admin@example.com \
+  --password admin
+```
+
+---
+
+### 4. Build and Start All Services
+
+```sh
+docker-compose up --build
+```
+
+- This will:
+  - Run data preprocessing and save processed data to a shared volume.
+  - Train the model and save it to the same volume.
+  - Start MLflow for experiment tracking ([http://localhost:5000](http://localhost:5000)).
+  - Launch the FastAPI service for predictions ([http://localhost:8000](http://localhost:8000)).
+  - Start Airflow for orchestration ([http://localhost:8080](http://localhost:8080)).
+
+**To stop all services:**
+
+```sh
+docker-compose down
+```
+
+---
+
+### 5. Trigger the Pipeline
+
+- Open [http://localhost:8080](http://localhost:8080) and log in with your Airflow admin credentials.
+- Trigger the `weather_pipeline` DAG.
+
+---
+
+### 6. Test the API
 
 #### a. Using the Provided Test Script
 
@@ -69,13 +98,19 @@ You should see: `{"status": "ok"}`
 
 ---
 
-### 4. Useful Notes
+### 7. Useful Notes
 
 - **MLflow UI:** [http://localhost:5000](http://localhost:5000)
+- **Airflow UI:** [http://localhost:8080](http://localhost:8080)
 - **API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
-- All containers share the `weather_data` Docker volume for data/model exchange.
-- If you change code or dependencies, re-run `docker compose up --build`.
-- For development, you can still use a Python virtual environment and run scripts locally.
+- All containers share data via mounted host folders (see `.env` and `docker-compose.yml`).
+- If you change code or dependencies, re-run `docker-compose up --build`.
+- The API will automatically load the model when it becomes available (no need to restart the API container).
+- For a completely fresh start, use:
+  ```sh
+  docker-compose down -v
+  ```
+  and repeat steps 3–6.
 
 ---
 
