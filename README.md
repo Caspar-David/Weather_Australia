@@ -15,13 +15,28 @@ cd Weather_Australia
 
 ---
 
-### 2. Set Up Your Local Path
+### 2. Set Up Your Local Path and Fernet Key
 
 Create a `.env` file in the project root with the following content (replace the path with your absolute project path):
 
 ```
 HOST_PROJECT_PATH=C:/datascientest/mlops/project/Weather_Australia
+AIRFLOW__CORE__FERNET_KEY=YOUR_FERNET_KEY_HERE
 ```
+
+**How to generate a Fernet key:**  
+Run this command in your terminal and copy the output:
+
+```sh
+python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+```
+
+Paste the generated key as the value for `AIRFLOW__CORE__FERNET_KEY` in your `.env` file.
+
+> **Note:**  
+> The Fernet key is required for Airflow to encrypt/decrypt sensitive data.  
+> For development/demo, you can use any generated key.  
+> **Do not share this key publicly for production use.**
 
 ---
 
