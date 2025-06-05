@@ -9,7 +9,7 @@ host_path = os.environ.get("HOST_PROJECT_PATH")
 with DAG(
     'weather_pipeline',
     start_date=datetime(2024, 1, 1),
-    schedule_interval=None,
+    schedule_interval="*/5 * * * *",
     catchup=False,
 ) as dag:
 

@@ -46,13 +46,7 @@ Paste the generated key as the value for `AIRFLOW__CORE__FERNET_KEY` in your `.e
 
 ```sh
 docker-compose run --rm airflow airflow db init
-docker-compose run --rm airflow airflow users create \
-  --username admin \
-  --firstname Admin \
-  --lastname User \
-  --role Admin \
-  --email admin@example.com \
-  --password admin
+docker-compose run --rm airflow airflow users create --username admin --firstname Admin --lastname User --role Admin --email admin@example.com --password admin
 ```
 
 ---
