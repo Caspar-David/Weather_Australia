@@ -1,18 +1,12 @@
-# MLOps_WeatherAUS_April2025
+# Weather Australia MLOps Pipeline
 
-For learning purposes
-
----
-
-## 🚀 Project Setup & Workflow
-
-This guide explains how to set up, build, and run the full MLOps pipeline using Docker for the Weather Australia project.
+A reproducible, containerized MLOps pipeline for weather prediction in Australia using Docker Compose and Airflow.
 
 ---
+
+## 🚀 Quick Start
 
 ### 1. Clone the Repository
-
-Clone your repository and navigate into the project folder:
 
 ```sh
 git clone <your-repo-url>
@@ -21,67 +15,79 @@ cd Weather_Australia
 
 ---
 
-### 2. (Optional) Local Python Setup
+### 2. Set Up Your Local Path and Fernet Key
 
-If you want to run scripts or tests locally (outside Docker):
+Create a `.env` file in the project root with the following content (replace the path with your absolute project path):
+
+```
+HOST_PROJECT_PATH=C:/datascientest/mlops/project/Weather_Australia
+AIRFLOW__CORE__FERNET_KEY=YOUR_FERNET_KEY_HERE
+```
+
+**How to generate a Fernet key:**  
+Run this command in your terminal and copy the output:
 
 ```sh
-python -m venv venv
-venv\Scripts\activate  # On Windows
-pip install --upgrade pip
-pip install -r requirements.txt
+python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+```
+
+Paste the generated key as the value for `AIRFLOW__CORE__FERNET_KEY` in your `.env` file.
+
+> **Note:**  
+> The Fernet key is required for Airflow to encrypt/decrypt sensitive data.  
+> For development/demo, you can use any generated key.  
+> **Do not share this key publicly for production use.**
+
+---
+
+### 3. Initialize Airflow Database and Create Admin User
+
+**Only needed on first setup or after wiping volumes:**
+
+```sh
+docker-compose run --rm airflow airflow db init
+docker-compose run --rm airflow airflow users create --username admin --firstname Admin --lastname User --role Admin --email admin@example.com --password admin
 ```
 
 ---
 
-### 3. Build Docker Images
-
-Build each component as a separate Docker image:
+### 4. Build and Start All Services
 
 ```sh
-docker build -f Dockerfile.preprocessing -t weather-preprocessing .
-docker build -f Dockerfile.modelling -t weather-modelling .
-docker build -f Dockerfile.api -t weather-api .
+docker-compose up --build
+```
+
+- This will:
+  - Run data preprocessing and save processed data to a shared volume.
+  - Train the model and save it to the same volume.
+  - Start MLflow for experiment tracking ([http://localhost:5000](http://localhost:5000)).
+  - Launch the FastAPI service for predictions ([http://localhost:8000](http://localhost:8000)).
+  - Start Airflow for orchestration ([http://localhost:8080](http://localhost:8080)).
+
+**To stop all services:**
+
+```sh
+docker-compose down
 ```
 
 ---
 
-### 4. Run the Pipeline with Docker
+### 5. Trigger the Pipeline
 
-All containers share the same Docker volume (`weather_data`) for data and model exchange.
-
-**a. Preprocessing:**  
-Runs data ingestion and transformation, outputs processed data to the shared Docker volume.
-
-```sh
-docker run --rm -v weather_data:/app/data/processed weather-preprocessing
-```
-
-**b. Modelling:**  
-Trains the model using the processed data and saves the trained model to the same volume.
-
-```sh
-docker run --rm -v weather_data:/app/data/processed weather-modelling
-```
-
-**c. API:**  
-Serves the trained model for predictions via FastAPI.
-
-```sh
-docker run --rm -p 8000:8000 -v weather_data:/app/data/processed weather-api
-```
+- Open [http://localhost:8080](http://localhost:8080) and log in with your Airflow admin credentials.
+- Trigger the `weather_pipeline` DAG.
 
 ---
 
-### 5. Test the API
+### 6. Test the API
 
-You can test the API using the provided `tests/test_api.py` script:
+#### a. Using the Provided Test Script
 
 ```sh
 python tests/test_api.py
 ```
 
-Or, send a manual POST request using Python:
+#### b. Manually with Python Requests
 
 ```python
 import requests
@@ -94,23 +100,27 @@ response = requests.post(url, json=payload)
 print(response.json())
 ```
 
----
+#### c. Health Check
 
-### 6. Health Check
-
-To check if the API is running:
-
-- Visit [http://localhost:8000/health](http://localhost:8000/health) in your browser.
-- You should see: `{"status": "ok"}`
+Visit [http://localhost:8000/health](http://localhost:8000/health) in your browser.  
+You should see: `{"status": "ok"}`
 
 ---
 
-### 7. Notes
+### 7. Useful Notes
 
-- All containers share the same Docker volume (`weather_data`) for data and model exchange.
-- You only need to rebuild Docker images if you change the code, requirements, or Dockerfiles.
-- For development, you can use the virtual environment and run scripts locally as well.
+- **MLflow UI:** [http://localhost:5000](http://localhost:5000)
+- **Airflow UI:** [http://localhost:8080](http://localhost:8080)
+- **API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
+- All containers share data via mounted host folders (see `.env` and `docker-compose.yml`).
+- If you change code or dependencies, re-run `docker-compose up --build`.
+- The API will automatically load the model when it becomes available (no need to restart the API container).
+- For a completely fresh start, use:
+  ```sh
+  docker-compose down -v
+  ```
+  and repeat steps 3–6.
 
 ---
 
-**Enjoy your reproducible, containerized MLOps pipeline!**
+**Enjoy your end-to-end, containerized MLOps workflow!**

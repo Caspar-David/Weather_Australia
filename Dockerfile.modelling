@@ -9,4 +9,4 @@ COPY src/ ./src/
 
 ENV PYTHONPATH=/app
 
-ENTRYPOINT ["python", "src/pipelines/run_modelling.py"]
+CMD ["python", "src/pipelines/run_modelling.py"]
