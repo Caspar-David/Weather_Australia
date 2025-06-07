@@ -1,16 +1,22 @@
 from airflow import DAG
 from airflow.providers.docker.operators.docker import DockerOperator
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 from docker.types import Mount
 
 host_path = os.environ.get("HOST_PROJECT_PATH")
+
+default_args = {
+    'retries': 3,  # Number of retries before failing
+    'retry_delay': timedelta(minutes=5),  # Wait 5 minutes between retries
+}
 
 with DAG(
     'weather_pipeline',
     start_date=datetime(2024, 1, 1),
     schedule_interval="*/5 * * * *",
     catchup=False,
+    default_args=default_args,  # Add default_args here
 ) as dag:
 
     preprocessing = DockerOperator(
