@@ -15,6 +15,18 @@ cd Weather_Australia
 
 ---
 
+### 1.1. Prepare the Data for Simulation
+
+Before starting the pipeline, you **must run the data split script** to prepare the raw data for simulation:
+
+```sh
+python src/data/split_for_simulation.py
+```
+
+This will generate the necessary files in `data/raw/` for the pipeline to work correctly.
+
+---
+
 ### 2. Set Up Your Local Path and Fernet Key
 
 Create a `.env` file in the project root with the following content (replace the path with your absolute project path):
