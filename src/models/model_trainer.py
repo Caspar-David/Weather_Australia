@@ -8,6 +8,7 @@ def load_params():
         params = yaml.safe_load(f)
     return params["XGBoost"]
 
+# This module trains an XGBoost model and saves it to a file.
 def train_model(X_train, y_train):
     params = load_params()
     model = XGBClassifier(**params)

@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
-import os
 
+# This script splits the raw weather data into an initial dataset (90%) and a future dataset (10%).
 RAW_PATH = "data/raw/weatherAUS.csv"
 INITIAL_PATH = "data/raw/weatherAUS_initial.csv"
 FUTURE_PATH = "data/raw/weatherAUS_future.csv"

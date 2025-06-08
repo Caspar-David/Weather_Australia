@@ -2,6 +2,7 @@ import os
 from src.data.data_ingestion import ingest_data
 from src.features.data_transformation import transform_data
 
+# This script runs the preprocessing pipeline for the weather data, transforming raw data into training and testing datasets.
 def main():
     df = ingest_data()
     X_train, X_test, y_train, y_test = transform_data(df)

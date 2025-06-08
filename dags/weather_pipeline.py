@@ -5,20 +5,22 @@ import os
 from docker.types import Mount
 from dotenv import load_dotenv
 
+# Load environment variables from .env file
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '.env'))
 host_path = os.environ["HOST_PROJECT_PATH"]
 
+# Retry configuration for tasks
 default_args = {
-    'retries': 3,  # Number of retries before failing
-    'retry_delay': timedelta(minutes=5),  # Wait 5 minutes between retries
+    'retries': 3,
+    'retry_delay': timedelta(minutes=5),  
 }
-
+# Define the DAG
 with DAG(
     'weather_pipeline',
     start_date=datetime(2024, 1, 1),
     schedule_interval="*/5 * * * *",
     catchup=False,
-    default_args=default_args,  # Add default_args here
+    default_args=default_args,
 ) as dag:
     
     append_new_row = DockerOperator(
@@ -54,7 +56,7 @@ with DAG(
     command='python src/pipelines/run_modelling.py',
     mounts=[
         Mount(source=f"{host_path}/data/processed", target="/app/data/processed", type="bind"),
-        Mount(source=f"{host_path}/mlruns", target="/mlruns", type="bind"),  # <-- FIXED HERE
+        Mount(source=f"{host_path}/mlruns", target="/mlruns", type="bind"),
     ],
     auto_remove=True,
     working_dir='/app',

@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import OneHotEncoder
 from imblearn.over_sampling import SMOTE
 
+# This module transforms the weather data for modeling by handling missing values, encoding categorical variables, and balancing the dataset.
 def transform_data(df):
     # Handle missing values for the target attribute and drop date column
     df.dropna(subset=['RainTomorrow'], inplace=True)

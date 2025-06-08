@@ -1,5 +1,6 @@
 import requests
 
+# This script tests the health endpoint and the prediction endpoint of a weather prediction API.
 def test_health():
     url = "http://localhost:8000/health"
     response = requests.get(url)

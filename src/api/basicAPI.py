@@ -1,19 +1,18 @@
 from fastapi import FastAPI, HTTPException
 from mlflow.tracking import MlflowClient
 import mlflow
-import joblib
 import pandas as pd
-import os
 
 app = FastAPI()
 
 MODEL_PATH = "data/processed/xgboost_model.pkl"
 model = None
 
+# Load the model from MLflow
 def get_best_model():
     mlflow.set_tracking_uri("http://mlflow:5000")
     client = MlflowClient()
-    experiment = client.get_experiment_by_name("Default")  # Or your experiment name
+    experiment = client.get_experiment_by_name("Default")
     if experiment is None:
         raise HTTPException(status_code=503, detail="No MLflow experiment found.")
     runs = client.search_runs(experiment_ids=[experiment.experiment_id], order_by=["metrics.accuracy DESC"])
@@ -30,10 +29,12 @@ def get_model():
         model = get_best_model()
     return model
 
+# Health check endpoint
 @app.get("/health")
 def health():
     return {"status": "ok"}
 
+# Prediction endpoint
 @app.post("/predict")
 def predict(features: dict):
     model = get_model()
