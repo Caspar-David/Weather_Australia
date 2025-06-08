@@ -9,5 +9,3 @@ COPY src/ ./src/
 COPY data/raw/weatherAUS.csv ./data/raw/weatherAUS.csv
 
 ENV PYTHONPATH=/app
-
-ENTRYPOINT ["python", "src/pipelines/run_preprocessing.py"]
