@@ -1,17 +1,11 @@
 import pandas as pd
 import os
 
+# This script appends a new row from the future dataset to the raw dataset.
 RAW_PATH = "data/raw/weatherAUS.csv"
 FUTURE_PATH = "data/raw/weatherAUS_future.csv"
 
 def main():
-    print("=== APPEND SCRIPT STARTED ===")
-    print("Current working directory:", os.getcwd())
-    print("Listing /app/data/raw:", os.listdir("data/raw"))
-    print("RAW_PATH exists:", os.path.exists(RAW_PATH))
-    print("FUTURE_PATH exists:", os.path.exists(FUTURE_PATH))
-    print("RAW_PATH absolute:", os.path.abspath(RAW_PATH))
-    print("FUTURE_PATH absolute:", os.path.abspath(FUTURE_PATH))
 
     if not os.path.exists(FUTURE_PATH):
         print("No future data left to append.")

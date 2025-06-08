@@ -1,6 +1,7 @@
 from xgboost import XGBClassifier
 import joblib
 
+# This module trains an XGBoost model and saves it to a file.
 def train_model(X_train, y_train):
     model = XGBClassifier()
     model.fit(X_train, y_train)
