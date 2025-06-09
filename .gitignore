@@ -177,6 +177,7 @@ cython_debug/
 # Ignore processed datasets and outputs
 *.pkl
 *.csv
+!tests/sample_weather.csv
 data/processed/
 weatherAUS.csv
 weatherAUS_pca_train.csv
