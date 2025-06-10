@@ -1,0 +1,38 @@
+schema: '2.0'
+stages:
+  preprocess:
+    cmd: set PYTHONPATH=.&& python src/pipelines/run_preprocessing.py
+    deps:
+    - path: data/raw/train_set.csv
+      hash: md5
+      md5: 8f0705c2c7df698e62e5cea538c2520f
+      size: 15236078
+    - path: src/data/data_ingestion.py
+      hash: md5
+      md5: 463108da32dc24b6a2b963ebb21904e0
+      size: 242
+    - path: src/features/data_transformation.py
+      hash: md5
+      md5: 9d434ab4c80f4463e9e7e9240b430f7f
+      size: 1752
+    - path: src/pipelines/run_preprocessing.py
+      hash: md5
+      md5: 5684b6d2974fff67263a7edb03d06595
+      size: 602
+    outs:
+    - path: data/processed/X_test.csv
+      hash: md5
+      md5: b594f5fc817fa025c50002fc72ba39a6
+      size: 13327039
+    - path: data/processed/X_train.csv
+      hash: md5
+      md5: b5f1cbbd8944278949f924dca950a15d
+      size: 100298331
+    - path: data/processed/y_test.csv
+      hash: md5
+      md5: 17ab777a9db445f7f224797e52c5d67b
+      size: 84131
+    - path: data/processed/y_train.csv
+      hash: md5
+      md5: 27fee5f8db82dd5c30f0c664972cb7e1
+      size: 522128
