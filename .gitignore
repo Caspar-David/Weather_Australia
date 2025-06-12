@@ -184,3 +184,5 @@ weatherAUS_pca_train.csv
 weatherAUS_pca_test.csv
 xgboost_model.pkl
 
+# dvc
+.netrc
