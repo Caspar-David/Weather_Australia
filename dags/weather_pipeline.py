@@ -64,5 +64,27 @@ with DAG(
     network_mode='weather_australia_default',
     mount_tmp_dir=False
 )
+    
+    sync_dvc = DockerOperator(
+        task_id='sync_dvc',
+        image='weather_australia_modelling:latest',
+        command='python src/models/sync_dvc.py',
+        mounts=[
+            Mount(source=f"{host_path}/data/processed", target="/app/data/processed", type="bind"),
+            Mount(source=f"{host_path}/.dvc", target="/app/.dvc", type="bind"),
+            Mount(source=f"{host_path}/.git", target="/app/.git", type="bind"),
+            Mount(source=f"{host_path}/.gitignore", target="/app/.gitignore", type="bind"),
+            Mount(source=f"{host_path}/.netrc", target="/root/.netrc", type="bind"),
+            Mount(source=f"{host_path}", target="/app", type="bind"),  # for dvc.yaml, params.yaml etc.
+        ],
+        environment={
+            "DVC_CONFIG_DIR": "/app/.dvc",
+        },
+        auto_remove=True,
+        working_dir='/app',
+        docker_url='unix://var/run/docker.sock',
+        network_mode='weather_australia_default',
+        mount_tmp_dir=False
+    )
 
-    append_new_row >> preprocessing >> modelling
+    append_new_row >> preprocessing >> modelling >> sync_dvc

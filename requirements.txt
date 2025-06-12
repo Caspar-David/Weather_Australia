@@ -11,6 +11,7 @@ notebook
 
 # === MLOps Tools ===
 dvc[s3]
+dvc[dagshub]
 mlflow==2.2.2
 dagshub
 
