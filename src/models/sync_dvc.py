@@ -1,30 +1,25 @@
 import subprocess
-import sys
 from datetime import datetime
 
 def run(cmd):
     print(f"$ {cmd}")
-    result = subprocess.run(cmd, shell=True)
+    result = subprocess.run(cmd, shell=True, check=False)
     if result.returncode != 0:
-        print(f"Command failed: {cmd}")
-        sys.exit(result.returncode)
+        raise subprocess.CalledProcessError(result.returncode, cmd)
 
-# Step 1: Commit stage-outputs
+# DVC commit
 run("dvc commit --force")
 
-# Step 2: Git add DVC-tracked files
+# Git staging
 run("git add dvc.lock")
 
-# Step 3: Git commit
-commit_message = f"Update data/model via Airflow at {datetime.utcnow().isoformat()}"
+# staged changes?
+has_changes = subprocess.call("git diff --cached --quiet", shell=True)
 
-try:
-    run(f'git commit -m "{commit_message}"')
-except SystemExit as e:
-    # Git exits with code 1 if there's nothing to commit – das ist okay
-    print("Nothing to commit. Probably no file has changed.")
-    sys.exit(0)
-
-# Push to Git + DVC remote
-run("git push origin Caspar")
-run(f"dvc push -r {remote}")
+# commit, if changes exist
+if has_changes != 0:
+    timestamp = datetime.now().isoformat()
+    commit_msg = f"Update data/model via Airflow at {timestamp}"
+    run(f"git commit -m \"{commit_msg}\"")
+else:
+    print("No changes to commit.")
