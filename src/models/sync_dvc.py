@@ -23,3 +23,5 @@ if has_changes != 0:
     run(f"git commit -m \"{commit_msg}\"")
 else:
     print("No changes to commit.")
+
+run("dvc push")
