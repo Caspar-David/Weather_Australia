@@ -2,9 +2,7 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
 
 jobs:
   build:
@@ -21,10 +19,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
-
-      - name: Run tests
-        run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest
@@ -35,4 +29,3 @@ jobs:
 
       - name: Echo success
         run: echo "CI/CD pipeline completed successfully"
-
