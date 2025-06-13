@@ -7,6 +7,7 @@ def run(cmd):
     if result.returncode != 0:
         raise subprocess.CalledProcessError(result.returncode, cmd)
 
+# Change!! Add your git information!
 def configure_git():
     """Setzt Name und Email für Git im Container."""
     run('git config --global user.name "Caspar_Stordeur"') # Change!
@@ -25,19 +26,9 @@ def main():
     except subprocess.CalledProcessError:
         setup_dvc_remote()
 
-    # Tracked Files
-    tracked_files = [
-        "data/processed/X_train.csv",
-        "data/processed/X_test.csv",
-        "data/processed/y_train.csv",
-        "data/processed/y_test.csv",
-        "data/processed/xgboost_model.pkl"
-    ]
-    for file in tracked_files:
-        run(f"dvc add {file}")
-
+    # Keine dvc add mehr nötig, da Outputs schon in dvc.yaml
     run("dvc commit --force")
-    run("git add data/processed/*.dvc dvc.lock")
+    run("git add dvc.lock")
 
     if subprocess.call("git diff --cached --quiet", shell=True) != 0:
         timestamp = datetime.now().isoformat()
