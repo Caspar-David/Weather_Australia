@@ -7,21 +7,45 @@ def run(cmd):
     if result.returncode != 0:
         raise subprocess.CalledProcessError(result.returncode, cmd)
 
-# DVC commit
-run("dvc commit --force")
+def configure_git():
+    """Setzt Name und Email für Git im Container."""
+    run('git config --global user.name "Caspar_Stordeur"') # Change!
+    run('git config --global user.email "casparstordeur@gmail.com"')  # Change!
 
-# Git staging
-run("git add dvc.lock")
+def setup_dvc_remote():
+    """Setzt das DVC-Remote auf DagsHub (nutzt .netrc für Auth)."""
+    run("dvc remote add -d origin https://dagshub.com/casparstordeur/Weather_Australia.dvc")
+    run("dvc remote modify origin --local auth basic")
 
-# staged changes?
-has_changes = subprocess.call("git diff --cached --quiet", shell=True)
+def main():
+    configure_git()
 
-# commit, if changes exist
-if has_changes != 0:
-    timestamp = datetime.now().isoformat()
-    commit_msg = f"Update data/model via Airflow at {timestamp}"
-    run(f"git commit -m \"{commit_msg}\"")
-else:
-    print("No changes to commit.")
+    try:
+        run("dvc remote list")
+    except subprocess.CalledProcessError:
+        setup_dvc_remote()
 
-run("dvc push")
+    # Tracked Files
+    tracked_files = [
+        "data/processed/X_train.csv",
+        "data/processed/X_test.csv",
+        "data/processed/y_train.csv",
+        "data/processed/y_test.csv",
+        "data/processed/xgboost_model.pkl"
+    ]
+    for file in tracked_files:
+        run(f"dvc add {file}")
+
+    run("dvc commit --force")
+    run("git add data/processed/*.dvc dvc.lock")
+
+    if subprocess.call("git diff --cached --quiet", shell=True) != 0:
+        timestamp = datetime.now().isoformat()
+        run(f'git commit -m "Update data/model via Airflow at {timestamp}"')
+    else:
+        print("No changes to commit.")
+
+    run("dvc push -r origin")
+
+if __name__ == "__main__":
+    main()
