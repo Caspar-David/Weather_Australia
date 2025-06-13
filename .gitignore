@@ -186,3 +186,9 @@ xgboost_model.pkl
 
 # dvc
 .netrc
+
+#mlruns
+
+mlruns/**/*.yaml
+mlruns/**/*.txt
+mlruns/**/MLmodel
