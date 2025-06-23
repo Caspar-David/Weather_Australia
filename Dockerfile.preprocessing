@@ -6,6 +6,6 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY src/ ./src/
-COPY data/raw/train_set.csv ./data/raw/train_set.csv
+COPY data/raw/weatherAUS.csv ./data/raw/weatherAUS.csv
 
 ENV PYTHONPATH=/app
