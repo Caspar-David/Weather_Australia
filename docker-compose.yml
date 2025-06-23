@@ -16,13 +16,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.api
+    container_name: weather_australia_api  
     ports:
       - "8000:8000"
     volumes:
       - ./data/processed:/app/data/processed
     depends_on:
       - mlflow
-
+  
   airflow:
     image: apache/airflow:2.9.1
     environment:
@@ -60,6 +61,29 @@ services:
     depends_on:
       - airflow
     command: scheduler
+  
+  prometheus:
+    image: prom/prometheus:v2.52.0
+    ports:
+    - "9090:9090"
+    volumes:
+    - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+    - --config.file=/etc/prometheus/prometheus.yml
+  
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    #container_name: cadvisor
+    ports:
+    - "4000:8080"
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:ro
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    - /var/run/docker.sock:/var/run/docker.sock:ro
+    privileged: true
 
 volumes:
   mlruns:
