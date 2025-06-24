@@ -15,7 +15,19 @@ cd Weather_Australia
 
 ---
 
-### 2. Set Up Your Local Path and Fernet Key
+### 1.1. Prepare the Data for Simulation
+
+Before starting the pipeline, you **must run the data split script** to prepare the raw data for simulation:
+
+```sh
+python src/data/split_for_simulation.py
+```
+
+This will generate the necessary files in `data/raw/` for the pipeline to work correctly.
+
+---
+
+### 2. Set Up Your Local Path and Fernet Key and DVC + Git information
 
 Create a `.env` file in the project root with the following content (replace the path with your absolute project path):
 
@@ -37,6 +49,14 @@ Paste the generated key as the value for `AIRFLOW__CORE__FERNET_KEY` in your `.e
 > The Fernet key is required for Airflow to encrypt/decrypt sensitive data.  
 > For development/demo, you can use any generated key.  
 > **Do not share this key publicly for production use.**
+
+DVC needs a `.netrc` file. Create it in the root with this content: 
+machine dagshub.com
+  login your_username
+  password your_private_token (https://dagshub.com/user/settings/tokens)
+
+
+For DVC to work you also need your git credentials in the src/models/sync_dvc.py. Edit the entries on lines 13 and 14!
 
 ---
 

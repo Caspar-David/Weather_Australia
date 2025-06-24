@@ -11,6 +11,7 @@ notebook
 
 # === MLOps Tools ===
 dvc[s3]
+dvc[dagshub]
 mlflow==2.2.2
 dagshub
 
@@ -30,3 +31,4 @@ python-box==6.0.2
 imbalanced-learn
 flake8
 apache-airflow==2.9.1
+python-dotenv

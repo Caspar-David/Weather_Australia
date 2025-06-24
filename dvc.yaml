@@ -1,0 +1,23 @@
+stages:
+  preprocess:
+    cmd: set PYTHONPATH=.&& python src/pipelines/run_preprocessing.py
+    deps:
+      - src/pipelines/run_preprocessing.py
+      - src/data/data_ingestion.py
+      - src/features/data_transformation.py
+      - data/raw/train_set.csv
+    outs:
+      - data/processed/X_train.csv
+      - data/processed/X_test.csv
+      - data/processed/y_train.csv
+      - data/processed/y_test.csv
+
+  train:
+    cmd: set PYTHONPATH=.&& python src/pipelines/run_modelling.py
+    deps:
+      - src/pipelines/run_modelling.py
+      - src/models/model_trainer.py
+      - data/processed/X_train.csv
+      - data/processed/y_train.csv
+    outs:
+      - data/processed/xgboost_model.pkl

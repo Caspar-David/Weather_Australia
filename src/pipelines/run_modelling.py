@@ -3,8 +3,8 @@ import mlflow
 import mlflow.sklearn
 from src.models.model_trainer import train_model
 from src.models.model_evaluation import evaluate_model
-import os
 
+# This script trains an XGBoost model using processed data and logs the model and metrics to MLflow.
 def main():
     # Set MLflow tracking URI to the mlflow service
     mlflow.set_tracking_uri("http://mlflow:5000")
