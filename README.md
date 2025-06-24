@@ -144,3 +144,33 @@ You should see: `{"status": "ok"}`
 ---
 
 **Enjoy your end-to-end, containerized MLOps workflow!**
+
+## API Credentials and Monitoring
+
+### API Authentication
+**Username:** `admin`  
+**Password:** `admin`
+
+Use these credentials to access protected endpoints such as `/model-info` or `/health`.
+
+**Note:**  
+Some browsers cache credentials. If you don’t see a login prompt again, try an incognito window or a tool like Postman or curl.
+
+---
+
+### 📈 Prometheus Metrics
+
+**Prometheus UI:** [http://localhost:9090](http://localhost:9090)
+
+**Metrics:**
+
+- **Total prediction requests:**  
+  `predict_requests_total`
+
+- **Total calls to the model info endpoint:**  
+  `model_info_requests_total`
+
+- **To view both metrics in one query:**  
+  `{__name__=~"model_info_requests_total|predict_requests_total"}`
+
+Paste the query into the Prometheus expression browser to see the metrics collected over time.

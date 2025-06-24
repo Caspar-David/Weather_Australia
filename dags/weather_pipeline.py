@@ -43,6 +43,7 @@ with DAG(
         mounts=[
             Mount(source=f"{host_path}/data/processed", target="/app/data/processed", type="bind"),
             Mount(source=f"{host_path}/data/raw", target="/app/data/raw", type="bind"),
+            #Mount(source=f"{host_path}/src", target="/app/src", type="bind"), # added only to to overwrite the scr in the saved image: to simulate a new data by changing the split into 0.1
         ],
         auto_remove=True,
         working_dir='/app',
