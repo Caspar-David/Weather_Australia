@@ -23,6 +23,9 @@ jobs:
           pip install -r requirements.txt
           pip install pytest
 
+      - name: Create data/processed directory
+        run: mkdir -p data/processed
+
       - name: Run Pytest
         run: |
           pytest tests/
