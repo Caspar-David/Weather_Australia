@@ -25,8 +25,7 @@ def main():
     max_results=1
     )
 
-    best_acc = runs[0].data.metrics["accuracy"] if runs else 0.0  # fallback if no runs yet
-
+    best_acc = runs[0].data.metrics.get("accuracy", 0.0) if runs else 0.0  # fallback if no runs yet
     
     
     # Start MLflow run

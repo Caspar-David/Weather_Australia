@@ -58,6 +58,7 @@ with DAG(
     mounts=[
         Mount(source=f"{host_path}/data/processed", target="/app/data/processed", type="bind"),
         Mount(source=f"{host_path}/mlruns", target="/mlruns", type="bind"),
+        Mount(source=f"{host_path}/params.yaml", target="/app/params.yaml", type="bind"),
     ],
     auto_remove=True,
     working_dir='/app',
