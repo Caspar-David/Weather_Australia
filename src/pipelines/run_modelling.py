@@ -3,6 +3,8 @@ import mlflow
 import mlflow.sklearn
 from src.models.model_trainer import train_model
 from src.models.model_evaluation import evaluate_model
+import requests
+import joblib
 
 # This script trains an XGBoost model using processed data and logs the model and metrics to MLflow.
 def main():
@@ -16,7 +18,7 @@ def main():
     y_test = pd.read_csv("data/processed/y_test.csv").squeeze()
 
     # Start MLflow run
-    with mlflow.start_run():
+    with mlflow.start_run() as run:
         # Train model
         model = train_model(X_train, y_train)
 
@@ -28,8 +30,24 @@ def main():
         mlflow.log_metric("accuracy", acc)
 
         # Save model to processed directory
-        import joblib
-        joblib.dump(model, "data/processed/xgboost_model.pkl")
+        
+        joblib.dump(model, "/app/data/processed/xgboost_model.pkl")
+
+        # Save run name and accuracy to file for /model-info API
+        run_name = run.info.run_name or f"run_{run.info.run_id}"
+        output_path = "/app/data/processed/model_run_name.txt"
+
+        with open(output_path, "w") as f:
+            f.write(f"{run_name}: acc={acc:.4f}")
+
+        try:
+            response = requests.post(
+                "http://api:8000/update-metrics",
+                json={"run_name": run_name}
+            )
+            print("Prometheus Metric updated:", response.json())
+        except Exception as e:
+            print("Error updating metric:", e)
 
 if __name__ == "__main__":
     main()

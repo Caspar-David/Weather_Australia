@@ -14,6 +14,7 @@ dvc[s3]
 dvc[dagshub]
 mlflow==2.2.2
 dagshub
+prometheus-client==0.20.0
 
 # === API Development ===
 fastapi

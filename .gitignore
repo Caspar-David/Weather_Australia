@@ -187,6 +187,9 @@ xgboost_model.pkl
 # dvc
 .netrc
 
+# Extensions VSCode
+.vscode
+
 #mlruns
 
 mlruns/**/*.yaml

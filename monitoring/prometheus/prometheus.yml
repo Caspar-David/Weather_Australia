@@ -1,0 +1,23 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "fastapi-metrics"
+    metrics_path: /metrics
+    basic_auth:
+      username: 'admin'
+      password: 'admin'
+    static_configs:
+      - targets: ["api:8000"]
+
+  - job_name: "airflow"
+    static_configs:
+      - targets: ["airflow-exporter:9112"]
+
+  - job_name: "node"
+    static_configs:
+      - targets: ["node-exporter:9100"]
+
+  - job_name: "cadvisor"
+    static_configs:
+      - targets: ["cadvisor:8080"]
