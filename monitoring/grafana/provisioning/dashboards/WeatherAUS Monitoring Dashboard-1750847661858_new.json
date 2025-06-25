@@ -88,6 +88,7 @@
             "mode": "thresholds"
           },
           "mappings": [],
+          "min": 0.85,
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -151,6 +152,117 @@
       "type": "gauge"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": true,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 3,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0.85,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "purple"
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "{__name__=\"model_accuracy\", instance=\"api:8000\", job=\"fastapi-metrics\"}"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 9,
+      "options": {
+        "barRadius": 0,
+        "barWidth": 1,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
+      },
+      "pluginVersion": "12.0.2",
+      "targets": [
+        {
+          "disableTextWrap": false,
+          "editorMode": "builder",
+          "expr": "model_accuracy",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Accuracy evolution",
+      "transparent": true,
+      "type": "barchart"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "fieldConfig": {
         "defaults": {
           "mappings": [],
@@ -173,7 +285,7 @@
         "h": 4,
         "w": 6,
         "x": 0,
-        "y": 8
+        "y": 16
       },
       "id": 1,
       "options": {
@@ -205,6 +317,10 @@
       "type": "stat"
     },
     {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
       "fieldConfig": {
         "defaults": {
           "mappings": [],
@@ -227,7 +343,7 @@
         "h": 4,
         "w": 6,
         "x": 6,
-        "y": 8
+        "y": 16
       },
       "id": 2,
       "options": {
@@ -280,7 +396,7 @@
         "h": 4,
         "w": 6,
         "x": 0,
-        "y": 12
+        "y": 20
       },
       "id": 3,
       "options": {
@@ -336,7 +452,7 @@
         "h": 4,
         "w": 6,
         "x": 6,
-        "y": 12
+        "y": 20
       },
       "id": 4,
       "options": {
@@ -392,7 +508,7 @@
         "h": 4,
         "w": 6,
         "x": 0,
-        "y": 16
+        "y": 24
       },
       "id": 5,
       "options": {
@@ -446,7 +562,7 @@
         "h": 4,
         "w": 6,
         "x": 6,
-        "y": 16
+        "y": 24
       },
       "id": 6,
       "options": {
