@@ -63,7 +63,7 @@
           "useBackend": false
         }
       ],
-      "title": "New panel",
+      "title": "Model Evolution",
       "transformations": [
         {
           "id": "labelsToFields",

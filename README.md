@@ -125,6 +125,32 @@ print(response.json())
 Visit [http://localhost:8000/health](http://localhost:8000/health) in your browser.  
 You should see: `{"status": "ok"}`
 
+#### d. Check Metrics
+
+Visit [http://localhost:8000/metrics](http://localhost:8000/metrics) in your browser. 
+You should see a list of API metrics
+
+#### e. Model info
+
+Visit [http://localhost:8000/model-info](http://localhost:8000/model-info) in your browser. 
+You should see the last model and it's accuracy. If the endpoint is empty, no model was run. 
+
+Example:
+{"run_name":"spiffy-boar-647","accuracy":0.8579}
+
+---
+
+### 7. Monitoring: Prometheus and Grafana
+
+Visit [http://localhost:9090](http://localhost:9090) in your browser. 
+You should see the Prometheus UI. Here, you can manually check information from API and Airflow, f. e. model_run_name or airflow_dag_run_count
+
+Visit [http://localhost:9090/targets](http://localhost:9090/targets) to see if all Endpoint are working. Airflow, Cadvisor, FastAPI-metrics and node should be in status up.
+
+Under [http://localhost:3000](http://localhost:3000) you can enter Grafana. 
+Click on Dashboards and open "WeatherAUS Monitoring Dashboard" to see a basic interface that tracks the Model Names and Model Accuracy, API requests, Airflow DAG Runs and instances and the CPU and Memory Usage. 
+
+
 ---
 
 ### 7. Useful Notes
