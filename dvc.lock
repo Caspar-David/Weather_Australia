@@ -70,5 +70,5 @@ stages:
     outs:
     - path: data/processed/xgboost_model.pkl
       hash: md5
-      md5: 30b8bf18d2b3bbeb1a66942eedcc80f3
-      size: 728028
+      md5: 12beece33a6a7397e126052a3f6c40c8
+      size: 721908
